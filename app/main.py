@@ -36,13 +36,9 @@ async def upload_image(
         txt = Image.new("RGBA", pil_image.size, (255, 255, 255, 0))
         draw = ImageDraw.Draw(txt)
 
-        # Fuente (usa DejaVuSans incluida en Linux, más segura que Segoe)
-        try:
-            fontPrimary = ImageFont.truetype("assets/fonts/Segoe UI Bold.ttf", 22)
-            fontSecundary = ImageFont.truetype("assets/fonts/Segoe UI Bold.ttf", 20)
-        except IOError:
-            fontPrimary = ImageFont.load_default()
-            fontSecundary = ImageFont.load_default()
+        base_size = pil_image.height // 30   # 1/30 del alto
+        fontPrimary = ImageFont.truetype("assets/fonts/Segoe UI Bold.ttf", base_size)
+        fontSecundary = ImageFont.truetype("assets/fonts/Segoe UI Bold.ttf", base_size - 2)
 
         authorCopyR = f"{author} ©"
 
@@ -54,11 +50,11 @@ async def upload_image(
         location_width = bbox_location[2] - bbox_location[0]
         location_height = bbox_location[3] - bbox_location[1]
 
-        spacing = 2
+        spacing = pil_image.height // 200
         total_text_height = author_height + location_height + spacing
         max_text_width = max(author_width, location_width)
 
-        padding = 8
+        padding = pil_image.width // 100
         x_author = pil_image.width - author_width - padding
         x_location = pil_image.width - location_width - padding
         y_start = pil_image.height - total_text_height - padding
@@ -66,7 +62,7 @@ async def upload_image(
         y_author = y_start
         y_location = y_start + author_height + spacing
 
-        gradient_width = max_text_width + 40
+        gradient_width = int(max_text_width * 1.2)
         gradient_start_x = pil_image.width - gradient_width
 
         for i in range(gradient_width):
@@ -78,7 +74,7 @@ async def upload_image(
                     fill=(90, 90, 90, alpha)
                 )
 
-        shadow_offset = 1
+        shadow_offset = max(1, pil_image.height // 300)
         draw.text((x_author + shadow_offset, y_author + shadow_offset),
                   authorCopyR, font=fontPrimary, fill=(0, 0, 0, 128))
         draw.text((x_location + shadow_offset, y_location + shadow_offset),
@@ -96,9 +92,8 @@ async def upload_image(
         if logo_path.exists():
             try:
                 logo = Image.open(logo_path).convert("RGBA")
-                max_logo_size = min(300, pil_image.width // 4, pil_image.height // 4)
-                if logo.width > max_logo_size or logo.height > max_logo_size:
-                    logo.thumbnail((max_logo_size, max_logo_size), Image.Resampling.LANCZOS)
+                max_logo_size = int(min(pil_image.width, pil_image.height) * 0.15)
+                logo.thumbnail((max_logo_size, max_logo_size), Image.Resampling.LANCZOS)
                 pos_x = 0
                 pos_y = watermarked.height - logo.height
                 watermarked.paste(logo, (pos_x, pos_y), logo)

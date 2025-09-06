@@ -101,16 +101,22 @@ async def upload_image(
                 print(f"Error al procesar el logo: {e}")
 
         # --- Respuesta directa en memoria ---
-        output_filename = f"marked_{image.filename.split('.')[0]}.webp"
+        output_filename = f"marked_{image.filename.split('.')[0]}.avif"
         buf = io.BytesIO()
-        watermarked.convert("RGB").save(
-            buf, "WEBP", quality=90, method=6, optimize=True
+        max_size = (2000, 2000)
+        watermarked.thumbnail(max_size, Image.Resampling.LANCZOS)
+        watermarked.save(
+            buf, 
+            "AVIF", 
+            quality=80,   # suficiente para mantener buena calidad
+            method=6, 
+            optimize=True
         )
         buf.seek(0)
 
         return StreamingResponse(
             buf,
-            media_type="image/webp",
+            media_type="image/avif",
             headers={"Content-Disposition": f"attachment; filename={output_filename}"}
         )
 

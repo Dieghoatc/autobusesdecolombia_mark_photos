@@ -36,7 +36,7 @@ async def upload_image(
         txt = Image.new("RGBA", pil_image.size, (255, 255, 255, 0))
         draw = ImageDraw.Draw(txt)
 
-        base_size = pil_image.height // 30   # 1/30 del alto
+        base_size = pil_image.height // 45   # 1/30 del alto
         fontPrimary = ImageFont.truetype("assets/fonts/Segoe UI Bold.ttf", base_size)
         fontSecundary = ImageFont.truetype("assets/fonts/Segoe UI Bold.ttf", base_size - 2)
 
@@ -92,7 +92,7 @@ async def upload_image(
         if logo_path.exists():
             try:
                 logo = Image.open(logo_path).convert("RGBA")
-                max_logo_size = int(min(pil_image.width, pil_image.height) * 0.15)
+                max_logo_size = int(min(pil_image.width, pil_image.height) * 0.3)
                 logo.thumbnail((max_logo_size, max_logo_size), Image.Resampling.LANCZOS)
                 pos_x = 0
                 pos_y = watermarked.height - logo.height

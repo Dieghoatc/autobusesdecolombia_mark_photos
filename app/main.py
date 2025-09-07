@@ -24,17 +24,16 @@ async def upload_image(
     location: str = Form(...)
 ):
     try:
-        # Validar que el archivo sea una imagen
         if not image.content_type.startswith("image/"):
             raise HTTPException(status_code=400, detail="El archivo debe ser una imagen")
 
-        # Leer y abrir la imagen
+        
         image_data = await image.read()
         pil_image = Image.open(io.BytesIO(image_data)).convert("RGBA")
 
-        # --- Añadir texto ---
-        txt = Image.new("RGBA", pil_image.size, (255, 255, 255, 0))
-        draw = ImageDraw.Draw(txt)
+      
+        text = Image.new("RGBA", pil_image.size, (255, 255, 255, 0))
+        draw = ImageDraw.Draw(text)
 
         base_size = pil_image.height // 45   # 1/30 del alto
         fontPrimary = ImageFont.truetype("assets/fonts/Segoe UI Bold.ttf", base_size)
@@ -76,18 +75,18 @@ async def upload_image(
 
         shadow_offset = max(1, pil_image.height // 300)
         draw.text((x_author + shadow_offset, y_author + shadow_offset),
-                  authorCopyR, font=fontPrimary, fill=(0, 0, 0, 128))
+                  authorCopyR, font=fontPrimary, fill=(0, 0, 0, 80))
         draw.text((x_location + shadow_offset, y_location + shadow_offset),
-                  location, font=fontSecundary, fill=(0, 0, 0, 128))
+                  location, font=fontSecundary, fill=(0, 0, 0, 80))
 
         draw.text((x_author, y_author), authorCopyR,
                   font=fontPrimary, fill=(255, 255, 255, 255))
         draw.text((x_location, y_location), location,
                   font=fontSecundary, fill=(255, 255, 255, 255))
 
-        watermarked = Image.alpha_composite(pil_image, txt)
+        watermarked = Image.alpha_composite(pil_image, text)
 
-        # --- Logo opcional ---
+        # Set Logo
         logo_path = Path("assets/logo.png")
         if logo_path.exists():
             try:
@@ -100,7 +99,7 @@ async def upload_image(
             except Exception as e:
                 print(f"Error al procesar el logo: {e}")
 
-        # --- Respuesta directa en memoria ---
+        # Response memory
         output_filename = f"marked_{image.filename.split('.')[0]}.avif"
         buf = io.BytesIO()
         max_size = (2000, 2000)
@@ -108,7 +107,7 @@ async def upload_image(
         watermarked.save(
             buf, 
             "AVIF", 
-            quality=80,   # suficiente para mantener buena calidad
+            quality=80,  
             method=6, 
             optimize=True
         )

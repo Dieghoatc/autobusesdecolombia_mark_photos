@@ -1,4 +1,0 @@
-# Docker (usar solo para desarrollo local, no para Railway)
-Dockerfile
-Dockerfile.*
-.dockerignore

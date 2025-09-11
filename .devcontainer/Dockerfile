@@ -2,10 +2,11 @@ FROM python:3.12-slim
 
 WORKDIR /workspace
 
-# Instalar dependencias útiles + libvips
+# Instalar dependencias + libvips + herramientas de imagen
 RUN apt-get update && apt-get install -y \
     git curl build-essential \
-    libvips-dev \
+    libvips libvips-dev libvips-tools \
+    libjpeg-dev libpng-dev libtiff-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copiar requirements e instalarlos
@@ -14,3 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Instalar linters/formatters opcionales
 RUN pip install --no-cache-dir black ruff mypy
+
+
+
+

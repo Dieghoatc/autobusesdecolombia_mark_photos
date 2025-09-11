@@ -1,22 +1,16 @@
 {
-  "name": "Python DevContainer",
+  "name": "ImageMagick Dev",
   "build": {
     "dockerfile": "Dockerfile",
     "context": ".."
   },
-  "workspaceFolder": "/workspace",
-  "mounts": [
-    "source=${localWorkspaceFolder},target=/workspace,type=bind"
-  ],
-  "settings": {
-    "python.defaultInterpreterPath": "/usr/local/bin/python",
-    "python.linting.enabled": true,
-    "python.formatting.provider": "black"
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
   },
-  "extensions": [
-    "ms-python.python",
-    "ms-python.vscode-pylance",
-    "ms-azuretools.vscode-containers"
-  ],
-  "postCreateCommand": "pip install -r requirements.txt"
+  "postCreateCommand": "convert -version"
 }

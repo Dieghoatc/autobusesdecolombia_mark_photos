@@ -4,9 +4,11 @@ WORKDIR /workspace
 
 # Instalar dependencias + libvips + herramientas de imagen
 RUN apt-get update && apt-get install -y \
-    git curl build-essential \
-    libvips libvips-dev libvips-tools \
-    libjpeg-dev libpng-dev libtiff-dev \
+    libvips-dev \
+    libvips-tools \
+    libvips42 \
+    pkg-config \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # Copiar requirements e instalarlos
@@ -15,6 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Instalar linters/formatters opcionales
 RUN pip install --no-cache-dir black ruff mypy
+
 
 
 

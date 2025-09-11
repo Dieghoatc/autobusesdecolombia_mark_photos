@@ -2,9 +2,10 @@ FROM python:3.12-slim
 
 WORKDIR /workspace
 
-# Instalar dependencias útiles para desarrollo
+# Instalar dependencias útiles + libvips
 RUN apt-get update && apt-get install -y \
     git curl build-essential \
+    libvips-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copiar requirements e instalarlos

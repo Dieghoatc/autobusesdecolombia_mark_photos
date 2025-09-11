@@ -92,8 +92,8 @@ async def upload_image(
                 logo = logo.bandjoin(alpha)
 
             # Redimensionar logo si es muy grande
-            max_logo_width = int(image_vips_base.width * 0.2)
-            max_logo_height = int(image_vips_base.height * 0.2)
+            max_logo_width = int(image_vips_base.width * 0.15)
+            max_logo_height = int(image_vips_base.height * 0.15)
             scale_w = min(1.0, max_logo_width / logo.width)
             scale_h = min(1.0, max_logo_height / logo.height)
             scale = min(scale_w, scale_h)

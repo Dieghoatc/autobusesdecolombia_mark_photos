@@ -1,4 +1,5 @@
 fastapi
 uvicorn[standard]
 pillow
+pyvips
 python-multipart
